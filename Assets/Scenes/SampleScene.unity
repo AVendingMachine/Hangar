@@ -15313,7 +15313,7 @@ MonoBehaviour:
   animator: {fileID: 2729490975023260894}
   autoFire: 1
   muzzleFlash: {fileID: 1975378310}
-  maxAmmo: 10
+  maxAmmo: 20
   bulletsUsedPerShot: 1
   animLayer: 0
   reloadDelay: 1.4
