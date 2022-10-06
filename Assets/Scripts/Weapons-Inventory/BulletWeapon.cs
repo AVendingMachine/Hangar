@@ -11,41 +11,64 @@ public class BulletWeapon : MonoBehaviour
     public Animator animator;
     public bool autoFire = false;
     public GameObject muzzleFlash;
+    public float maxAmmo = 10;
+    public float bulletsUsedPerShot = 1;
+    private float currentAmmo;
+    public int animLayer = 0;
+    public float reloadDelay = 1f;
 
-   // public Transform ads;
-  //  public Transform hipfire;
+
+   
+
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        currentAmmo = maxAmmo;
     }
     //garbage solution to animation delay
 
     
-    IEnumerator AnimationHandler()
+    IEnumerator AnimationHandler(string animationName, float delay)
     {
-        animator.SetBool("Firing", true);
+        animator.SetBool(animationName, true);
+        yield return new WaitForSeconds(delay);
+        animator.SetBool(animationName, false);
+    }
+    IEnumerator MuzzleFlash()
+    {
         muzzleFlash.SetActive(true);
-        yield return new WaitForSeconds(0.05f);
-        animator.SetBool("Firing", false);
+        yield return new WaitForSeconds(0.1f);
         muzzleFlash.SetActive(false);
+    }
+    IEnumerator ResetAmmo()
+    {
+        yield return new WaitForSeconds(reloadDelay);
+        currentAmmo = maxAmmo;
     }
     // Update is called once per frame
     void Update()
     {
-       
         cooldown = Mathf.Clamp(cooldown -= Time.deltaTime,0,Mathf.Infinity);
-        //Checks for mouse1 and for the lack of cooldown
-        if (Input.GetButtonDown("Fire1") && cooldown <= 0 && autoFire == false)
+        //Checks for mouse1 and for the lack of cooldown + having enough ammo
+        if (Input.GetButtonDown("Fire1") && cooldown <= 0 && autoFire == false && currentAmmo >0)
         {
             FireBullet();
         }
-        if (Input.GetButton("Fire1") && cooldown <= 0 && autoFire == true)
+        if (Input.GetButton("Fire1") && cooldown <= 0 && autoFire == true && currentAmmo >0)
         {
             FireBullet();
             Debug.Log("autofire proc");
         }
-      
+        //Checks for if you have 0 ammo and plays the reload animation if true, also resets currentammo to maxammo after
+        if (currentAmmo <= 0)
+        {
+            animator.SetBool("NeedReload", true);
+            StartCoroutine(AnimationHandler("NeedReload", reloadDelay));
+            StartCoroutine(ResetAmmo());
+        }
+
+        
             
 
 
@@ -53,7 +76,9 @@ public class BulletWeapon : MonoBehaviour
     
     void FireBullet()
     {
-        StartCoroutine(AnimationHandler());
+        currentAmmo = Mathf.Clamp(currentAmmo - bulletsUsedPerShot,0,maxAmmo);
+        StartCoroutine(AnimationHandler("Firing",0.05f));
+        StartCoroutine(MuzzleFlash());
         cooldown = fireRate;
         //Actually makes the raycast (Its in an if statement to stop an error if it hits nothing)
         RaycastHit hit;
