@@ -12,6 +12,7 @@ public class EnemyHealth : MonoBehaviour
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
+        Debug.Log("queen elizabeth");
     }
 
     void Start()
