@@ -17,9 +17,9 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask groundMask;
     bool isGrounded;
     public float jumpHeight = 2f;
-    public float gravity = -9.81f;
+    public float gravity = -29.81f;
     public Camera mainCamera;
-    Vector3 velocity;
+    public Vector3 velocity;
     public bool sliding = false;
     Vector3 direction;
     public Transform normalCamPos;
@@ -30,6 +30,7 @@ public class PlayerMovement : MonoBehaviour
     public bool sprintToggle = false;
     private float referenceY;
     public float wallRunFallOff = 1;
+    public bool movingAllowed = true;
     // Start is called before the first frame update
 
     void Start()
@@ -48,8 +49,11 @@ public class PlayerMovement : MonoBehaviour
         {
             direction = transform.right * xAxis + transform.forward * zAxis;
         }
+        if (movingAllowed == true)
+        {
+            controller.Move(direction * Time.deltaTime * currentSpeed);
+        }
         
-        controller.Move(direction * Time.deltaTime * currentSpeed);
         //Ground Check
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
         //Jumping Code
@@ -65,7 +69,11 @@ public class PlayerMovement : MonoBehaviour
 
         }
         velocity.y += gravity * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
+        if (movingAllowed == true)
+        {
+            controller.Move(velocity * Time.deltaTime);
+        }
+        
         //Running code
         if (Input.GetKeyDown(KeyCode.LeftShift) && toggleSprint == false)
         {

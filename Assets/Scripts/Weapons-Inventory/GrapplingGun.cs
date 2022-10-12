@@ -75,6 +75,8 @@ public class GrapplingGun : MonoBehaviour
                 grappleTime = Mathf.Clamp(grappleTime + 0.5f*(Time.deltaTime / Vector3.Distance(player.position, hook.position)), 0, 1);
                 lineRenderer.enabled = true;
                 player.GetComponent<PlayerMovement>().gravity = 0;
+                player.GetComponent<PlayerMovement>().velocity = new Vector3(0, 0, 0);
+                player.GetComponent<PlayerMovement>().movingAllowed = false;
             }
             else
             {
@@ -99,7 +101,8 @@ public class GrapplingGun : MonoBehaviour
             canGrapple = false;
             grappleTime = 0;
             lineRenderer.enabled = false;
-            player.GetComponent<PlayerMovement>().gravity = -9.81f;
+            player.GetComponent<PlayerMovement>().gravity = -29.81f;
+            player.GetComponent<PlayerMovement>().movingAllowed = true;
             hook.position = new Vector3(100, 100, 100);
         }
     }
