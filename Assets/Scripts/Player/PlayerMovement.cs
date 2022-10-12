@@ -202,7 +202,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            gravity = -9.81f; 
+            gravity = -29.81f; 
         }
     }
    

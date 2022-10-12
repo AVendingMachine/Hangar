@@ -18,7 +18,7 @@ public class Ragdoll : MonoBehaviour
     {
         yield return new WaitForSeconds(2);
         GetComponent<Rigidbody>().isKinematic = true;
-        GetComponent<CapsuleCollider>().enabled = false;
+        GetComponent<BoxCollider>().enabled = false;
     }
     // Update is called once per frame
     void Update()

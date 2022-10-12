@@ -15,7 +15,7 @@ public class GrapplingGun : MonoBehaviour
     public float unhookDistance = 5;
     public Transform grappleParent;
     public Transform grappleEx;
-
+    public bool colliding = false;
     //This is all to keep the line attached to grappling gun and avoid lagback
     private void OnEnable()
     {
@@ -32,6 +32,16 @@ public class GrapplingGun : MonoBehaviour
     private void LateUpdate()
     {
         UpdateLinePosition();
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("pmigdfouagyrea");
+        colliding = true;
+    }
+    
+    private void OnTriggerExit(Collider other)
+    {
+        colliding = false;
     }
 
     //Rest of the code goes in update
@@ -56,7 +66,7 @@ public class GrapplingGun : MonoBehaviour
 
         }
         grappleParent.rotation = grappleEx.rotation;
-        if (Input.GetKey(KeyCode.Mouse0) && tooClose == false)
+        if (Input.GetKey(KeyCode.Mouse0) && tooClose == false && colliding == false)
         {
             //This detects whether you "can grapple" and sets the boolean
             if (Input.GetKeyDown(KeyCode.Mouse0))
